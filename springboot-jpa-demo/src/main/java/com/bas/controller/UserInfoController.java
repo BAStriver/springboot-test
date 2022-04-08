@@ -2,6 +2,8 @@ package com.bas.controller;
 
 import com.bas.entity.UserInfo;
 import com.bas.repository.UserInfoRepository;
+import com.secondary.entity.UserInfo2;
+import com.secondary.repository.UserInfoRepository2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +19,9 @@ import java.util.UUID;
 public class UserInfoController {
     @Autowired
     private UserInfoRepository userInfoRepository;
+
+    @Autowired
+    private UserInfoRepository2 userInfoRepository2;
 
     @RequestMapping("/queryAll")
     @ResponseBody
@@ -41,6 +46,17 @@ public class UserInfoController {
         userInfo.setVersion(userInfoOptional.get().getVersion());
         userInfoRepository.save(userInfo);
         System.out.println("=========4==========");
+
+        return list;
+    }
+
+    @RequestMapping("/queryAll2")
+    @ResponseBody
+    public List<UserInfo2> queryAll2() {
+        List<UserInfo2> list = new ArrayList<>();
+        list = userInfoRepository2.findAll();
+
+        System.out.println("=========4==========" + list);
 
         return list;
     }
