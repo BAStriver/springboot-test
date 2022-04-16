@@ -1,11 +1,10 @@
 package com.bas.controller;
 
 import com.bas.entity.UserInfo;
+import com.bas.model.UserInfoDTO;
 import com.bas.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,5 +42,34 @@ public class UserInfoController {
         System.out.println("=========4==========");
 
         return list;
+    }
+
+    @PostMapping("/add")
+    @ResponseBody
+    public boolean add(@RequestBody UserInfoDTO user) {
+        System.out.println("=========1==========");
+        List<UserInfo> userInfoOptionalList = userInfoRepository.findByName(user.getName());
+        userInfoOptionalList.forEach(userInfoOptional -> {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setName(userInfoOptional.getName());
+            userInfo.setId(userInfoOptional.getId());
+            userInfo.setGender(user.getGender());
+            userInfo.setAge(user.getAge());
+            userInfo.setVersion(userInfoOptional.getVersion());
+            System.out.println("userInfo1: "+userInfo);
+            userInfoRepository.save(userInfo);
+            System.out.println("=========4==========");
+        });
+
+        if(userInfoOptionalList.isEmpty()) {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setName(user.getName());
+            userInfo.setGender(user.getGender());
+            userInfo.setAge(user.getAge());
+            System.out.println("userInfo2: "+userInfo);
+            userInfoRepository.save(userInfo);
+        }
+
+        return true;
     }
 }
