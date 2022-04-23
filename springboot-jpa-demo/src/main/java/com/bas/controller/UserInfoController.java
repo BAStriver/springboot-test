@@ -4,6 +4,7 @@ import com.bas.entity.UserInfo;
 import com.bas.model.UserInfoDTO;
 import com.bas.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class UserInfoController {
 
     @PostMapping("/add")
     @ResponseBody
-    public boolean add(@RequestBody UserInfoDTO user) {
+    public boolean add(@RequestBody @Validated UserInfoDTO user) {
         System.out.println("=========1==========");
         List<UserInfo> userInfoOptionalList = userInfoRepository.findByName(user.getName());
         userInfoOptionalList.forEach(userInfoOptional -> {
