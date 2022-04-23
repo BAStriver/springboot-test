@@ -10,10 +10,6 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-/**
- * 全局异常处理器
- */
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
