@@ -14,6 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,10 +46,28 @@ public class SecurityConfiguration {
 //                .userDetailsService(authorizeService)
                 .csrf()
                 .disable()
+                .cors()
+                .configurationSource(this.configurationSource())
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(this::onAuthenticationFailure)
                 .and()
                 .build();
+    }
+
+    // handle CORS
+    private CorsConfigurationSource configurationSource () {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOriginPattern("*"); // http://localhost:5173
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addExposedHeader("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**",corsConfiguration);
+
+        return source;
     }
 
     @Bean
