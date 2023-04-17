@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                 .and()
                 .logout()
                 .logoutUrl("/api/auth/logout")
+                .logoutSuccessHandler(this::onAuthenticationSuccess)
                 .and()
 //                .userDetailsService(authorizeService)
                 .csrf()
@@ -56,7 +57,7 @@ public class SecurityConfiguration {
     }
 
     // handle CORS
-    private CorsConfigurationSource configurationSource () {
+    private CorsConfigurationSource configurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOriginPattern("*"); // http://localhost:5173
         corsConfiguration.setAllowCredentials(true);
@@ -65,7 +66,7 @@ public class SecurityConfiguration {
         corsConfiguration.addExposedHeader("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",corsConfiguration);
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
         return source;
     }
@@ -85,7 +86,10 @@ public class SecurityConfiguration {
 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 //        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(JSONObject.toJSONString(ResponseEntity.success("login successfully.")));
+        if (request.getRequestURI().endsWith("/login"))
+            response.getWriter().write(JSONObject.toJSONString(ResponseEntity.success("login successfully.")));
+        else if (request.getRequestURI().endsWith("/logout"))
+            response.getWriter().write(JSONObject.toJSONString(ResponseEntity.success("logout successfully.")));
     }
 
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
