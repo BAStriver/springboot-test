@@ -72,4 +72,12 @@ public class UserInfoController {
 
         return true;
     }
+
+    @PostMapping("/test")
+    @ResponseBody
+    public UserInfoDTO test(@RequestBody UserInfoDTO user) {
+        System.out.println("=========test==========");
+        System.out.println("user: "+user);
+        return user;
+    }
 }
